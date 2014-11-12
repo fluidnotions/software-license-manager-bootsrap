@@ -10,6 +10,8 @@ import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.messaging.SubProtocolWebSocketHandler;
 
+import com.groupfio.pgp.PGPProcessor;
+
 public class PGPProcessorSubProtocolWebSocketHandler extends SubProtocolWebSocketHandler {
 	
 	private Logger log = Logger.getLogger(PGPProcessorSubProtocolWebSocketHandler.class.getName());
@@ -27,9 +29,20 @@ public class PGPProcessorSubProtocolWebSocketHandler extends SubProtocolWebSocke
 			WebSocketMessage<?> message) throws Exception {
 		
 		TextMessage textMessage = (TextMessage) message;
-		
-		log.debug("******INBOUND: handleMessage: textMessage payload:" + textMessage.getPayload());
-		
+		log.debug("INBOUND: handleMessage: textMessage payload:" + textMessage.getPayload());
+		if (!textMessage.getPayload().startsWith("CONNECT")
+			&& !textMessage.getPayload().startsWith("SUBSCRIBE")) {
+			try {
+				log.debug("INBOUND: handleMessage: decryption process - does not start with CONNECT/SUBSCRIBE");
+				byte[] pgpDecryptedPayload = PGPProcessor
+						.decryptByteArray(textMessage.asBytes());
+				log.debug("INBOUND: handleMessage: textMessage pgpDecryptedPayload:"
+						+ new String(pgpDecryptedPayload));
+				message = new TextMessage(pgpDecryptedPayload);
+			} catch (Throwable e) {e.printStackTrace();}
+		}else{
+			log.debug("INBOUND: handleMessage: skipping decryption - starts with CONNECT/SUBSCRIBE");
+		}
 		super.handleMessage(session, message);
 	}
 
@@ -42,6 +55,6 @@ public class PGPProcessorSubProtocolWebSocketHandler extends SubProtocolWebSocke
 		super.handleMessage(message);
 	}
 	
-	
+
 
 }
