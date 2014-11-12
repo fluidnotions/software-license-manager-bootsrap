@@ -28,7 +28,7 @@ import com.groupfio.service.FioLicenseService;
 @Controller
 public class FioLicenseController {
 	
-	private static final Log logger = LogFactory
+	private static final Log log = LogFactory
 			.getLog(FioLicenseController.class);
 	private final String[] validityPeriodOptionList = new String[]{"6 months", "1 year", "2 years"};
 
@@ -52,7 +52,7 @@ public class FioLicenseController {
 	@RequestMapping(value = "/getAllFioLicense.json", method = RequestMethod.GET)
 	public @ResponseBody List<FioLicense> getAllFioLicenseAsAjax() {
 		List<FioLicense> list = fioLicenseService.getAllFioLicense();
-		logger.debug("getAllFioLicenseAsAjax: list.size: "+list.size());
+		log.debug("getAllFioLicenseAsAjax: list.size: "+list.size());
 	    return list;
 	}
 
@@ -96,7 +96,7 @@ public class FioLicenseController {
 	private void convertFormDataToEntityValues(FioLicense fioLicense) {
 		String activationDateString = fioLicense.getActivationDateString();
 		if (activationDateString != null) {
-			logger.debug("activationDateString: " + activationDateString);
+			log.debug("activationDateString: " + activationDateString);
 			// INFO : com.groupfio.controller.FioLicenseController -
 			// activationDateString: 10/28/2014
 			// s - timestamp in format yyyy-[m]m-[d]d hh:mm:ss[.f...]. The
@@ -105,7 +105,7 @@ public class FioLicenseController {
 			fioLicense
 					.setActivationDate(covertFormFieldStringToTimestamp(activationDateString));
 			String validityPeriodString = fioLicense.getValidityPeriodString();
-			logger.debug("validityPeriodString: " + validityPeriodString);
+			log.debug("validityPeriodString: " + validityPeriodString);
 			switch (validityPeriodString) {
 			case "6 months":
 				fioLicense.setExpirationDate(addMonthsToTimestamp(6,
@@ -121,19 +121,19 @@ public class FioLicenseController {
 				break;
 			}
 		} else {
-			logger.debug("activationDateString is null");
+			log.debug("activationDateString is null");
 		}
 
 	}
 
 	private Timestamp addMonthsToTimestamp(int months, Timestamp ts) {
-		logger.debug("months to add: "+months);
+		log.debug("months to add: "+months);
 		int years = 0;
 		if(months>12){
 			years = months/12;
-			logger.debug("months/12: "+years);
+			log.debug("months/12: "+years);
 			months = months%12;
-			logger.debug("remainder months: "+months);
+			log.debug("remainder months: "+months);
 			
 		}
 		Calendar cal = Calendar.getInstance();
@@ -144,7 +144,7 @@ public class FioLicenseController {
 			cal.add(Calendar.YEAR, years);
 		}
 		Timestamp adjusted = new Timestamp(cal.getTime().getTime());
-		logger.debug("initial: "+ts.toString()+", adjusted: "+adjusted.toString());
+		log.debug("initial: "+ts.toString()+", adjusted: "+adjusted.toString());
 		return adjusted;
 	}
 
@@ -157,7 +157,7 @@ public class FioLicenseController {
 			Date d = formatter.parse(activationDateString);
 			((SimpleDateFormat) formatter).applyPattern("yyyy-MM-dd HH:mm:ss.SSS");
 			String newDateString = formatter.format(d);
-			logger.debug("std timestamp formatted date: "+newDateString);
+			log.debug("std timestamp formatted date: "+newDateString);
 
 			ts = Timestamp.valueOf(newDateString);
 		} catch (ParseException e) {

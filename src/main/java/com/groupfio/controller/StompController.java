@@ -16,7 +16,7 @@ import com.groupfio.service.VerifyLicFileService;
 @Controller
 public class StompController {
 
-	private static final Log logger = LogFactory.getLog(StompController.class);
+	private static final Log log = LogFactory.getLog(StompController.class);
 
 	private final VerifyLicFileService verifyLicFileService;
 
@@ -29,7 +29,7 @@ public class StompController {
 	@MessageMapping("/licfileverify")
 	public void executeVerify(LicFile licFile, Principal principal) {
 		licFile.setSerialnumber(principal.getName());
-		logger.debug("LicFile: " + licFile);
+		log.debug("LicFile: " + licFile);
 		this.verifyLicFileService.executeVerify(licFile);
 	}
 

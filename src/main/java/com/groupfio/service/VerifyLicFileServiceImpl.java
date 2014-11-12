@@ -24,7 +24,7 @@ import com.groupfio.pojo.LicFile.LicFileAction;
 @Service
 public class VerifyLicFileServiceImpl implements VerifyLicFileService {
 
-	private static final Log logger = LogFactory
+	private static final Log log = LogFactory
 			.getLog(VerifyLicFileServiceImpl.class);
 
 	@Autowired
@@ -56,7 +56,7 @@ public class VerifyLicFileServiceImpl implements VerifyLicFileService {
 			String payload = "Rejected licFile " + licFile
 					+ ". Reason [serialnumber=" + serialnumber
 					+ " not found in database!]";
-			logger.error(payload);
+			log.error(payload);
 			this.messagingTemplate.convertAndSendToUser(
 					licFile.getSerialnumber(), "/queue/errors", payload);
 			return;
@@ -78,14 +78,14 @@ public class VerifyLicFileServiceImpl implements VerifyLicFileService {
 			Map<String, Object> map = new HashMap<>();
 			map.put(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON);
 
-			logger.debug("Sending verified result: " + verified);
+			log.debug("Sending verified result: " + verified);
 			this.messagingTemplate.convertAndSendToUser(
 					result.getSerialNumber(), "/queue/results", result, map);
 
 		} else {
 			String payload = "LicFileAction not set or not implemented! ("
 					+ licFile.getAction() + ")";
-			logger.error(payload);
+			log.error(payload);
 			this.messagingTemplate.convertAndSendToUser(
 					licFile.getSerialnumber(), "/queue/errors", payload);
 		}
