@@ -21,10 +21,10 @@ import com.groupfio.message.pojo.Message;
 import com.groupfio.model.FioLicense;
 
 @Service
-public class VerifyLicFileServiceImpl implements VerifyLicFileService {
+public class CheckActionServiceImpl implements CheckActionService {
 
 	private static final Log log = LogFactory
-			.getLog(VerifyLicFileServiceImpl.class);
+			.getLog(CheckActionServiceImpl.class);
 
 	@Autowired
 	private FioLicenseDAO fioLicenseDAO;
@@ -34,7 +34,7 @@ public class VerifyLicFileServiceImpl implements VerifyLicFileService {
 	private final List<Message> messages = new CopyOnWriteArrayList<>();
 
 	@Autowired
-	public VerifyLicFileServiceImpl(
+	public CheckActionServiceImpl(
 			SimpMessageSendingOperations messagingTemplate) {
 		this.messagingTemplate = messagingTemplate;
 
@@ -61,7 +61,7 @@ public class VerifyLicFileServiceImpl implements VerifyLicFileService {
 			return;
 		}
 		if (licFileMessage.getAction() == ActionMessageConstants.LIC_FILE_ACTION_MSG) {
-			String verified = LicFileMessage.VFAIL;
+			String verified = ActionMessageConstants.LIC_FILE_VFAIL;
 			long timestamp = System.currentTimeMillis();
 
 			// check values from agent against stored values
@@ -69,7 +69,7 @@ public class VerifyLicFileServiceImpl implements VerifyLicFileService {
 					.equals(licFileMessage.getLicfileCheckSum())
 					&& fioLicense.getLicfileByteSize() == licFileMessage
 							.getLicfileByteSize()) {
-				verified = LicFileMessage.VPASS;
+				verified = ActionMessageConstants.LIC_FILE_VPASS;
 			}
 
 			 result = new Message(licFileMessage.getSerialNumber(),
@@ -90,5 +90,25 @@ public class VerifyLicFileServiceImpl implements VerifyLicFileService {
 		}
 
 		if(result!=null)fioLicenseDAO.updateFioLicenseForAgentActionResult(result);
+	}
+
+	@Override
+	public void executeCheckIsEnabled(Message message) {
+		FioLicense fioLicense = fioLicenseDAO.getFioLicence(message.getSerialNumber());
+		if(fioLicense.getIsEnabled().equals("FALSE")){
+			long timestamp = System.currentTimeMillis();
+			Message result = new Message(message.getSerialNumber(),
+					timestamp, ActionMessageConstants.TERM_ACTION_MSG, fioLicense.toString());
+			result.setOrigin(Message.Origin.SERVER);
+			Map<String, Object> map = new HashMap<>();
+			map.put(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON);
+
+			log.debug("Sending message result: "+result.toString());
+			this.messagingTemplate.convertAndSendToUser(
+					result.getSerialNumber(), "/queue/results", result, map);
+		}else{
+			log.debug("not sending response for message "+message.toString()+" beacuse is enabled was true");
+		}
+		
 	}
 }

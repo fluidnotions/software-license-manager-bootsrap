@@ -11,18 +11,19 @@ import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 
 import com.groupfio.message.pojo.LicFileMessage;
-import com.groupfio.service.VerifyLicFileService;
+import com.groupfio.message.pojo.Message;
+import com.groupfio.service.CheckActionService;
 
 @Controller
 public class StompController {
 
 	private static final Log log = LogFactory.getLog(StompController.class);
 
-	private final VerifyLicFileService verifyLicFileService;
+	private final CheckActionService checkActionService;
 
 	@Autowired
-	public StompController(VerifyLicFileService verifyLicFileService) {
-		this.verifyLicFileService = verifyLicFileService;
+	public StompController(CheckActionService checkActionService) {
+		this.checkActionService = checkActionService;
 
 	}
 
@@ -30,7 +31,14 @@ public class StompController {
 	public void executeVerify(LicFileMessage licFileMessage, Principal principal) {
 		licFileMessage.setSerialNumber(principal.getName());
 		log.debug("LicFileMessage: " + licFileMessage);
-		this.verifyLicFileService.executeVerify(licFileMessage);
+		this.checkActionService.executeVerify(licFileMessage);
+	}
+	
+	@MessageMapping("/isenabled")
+	public void executeCheckEnabled(Message message, Principal principal) {
+		message.setSerialNumber(principal.getName());
+		log.debug("Message: " + message);
+		this.checkActionService.executeCheckIsEnabled(message);
 	}
 
 	@MessageExceptionHandler

@@ -2,8 +2,7 @@ package com.groupfio.message.pojo;
 
 public class LicFileMessage extends Message{
 
-	public static final String VPASS = "VERFICATION_PASSED";
-	public static final String VFAIL = "VERFICATION_FAILED";
+	
 
 	private int licfileByteSize;
 
