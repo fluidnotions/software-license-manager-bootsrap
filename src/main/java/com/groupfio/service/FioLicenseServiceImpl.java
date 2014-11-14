@@ -67,13 +67,15 @@ public class FioLicenseServiceImpl implements FioLicenseService {
 		}
 		fioLicenseDAO.update(fioLicense);
 		
-		//send action to user
-		Map<String, Object> map = new HashMap<>();
-		map.put(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON);
-
-		log.debug("Sending action: " + terminate.toString());
-		this.messagingTemplate.convertAndSendToUser(
-				terminate.getSerialNumber(), "/queue/results", terminate, map);
+		if (terminate!=null) {
+			//send action to user
+			Map<String, Object> map = new HashMap<>();
+			map.put(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON);
+			log.debug("Sending action: " + terminate.toString());
+			this.messagingTemplate.convertAndSendToUser(
+					terminate.getSerialNumber(), "/queue/results", terminate,
+					map);
+		}
 
 	}
 

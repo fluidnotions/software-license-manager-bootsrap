@@ -47,6 +47,7 @@ public class CheckActionServiceImpl implements CheckActionService {
 	@Override
 	@Transactional
 	public void executeVerify(LicFileMessage licFileMessage) {
+		log.debug("licFileMessage: "+licFileMessage.toString());
 		String serialnumber = licFileMessage.getSerialNumber();
 
 		FioLicense fioLicense = fioLicenseDAO.getFioLicence(serialnumber);
@@ -60,7 +61,7 @@ public class CheckActionServiceImpl implements CheckActionService {
 					licFileMessage.getSerialNumber(), "/queue/errors", payload);
 			return;
 		}
-		if (licFileMessage.getAction() == ActionMessageConstants.LIC_FILE_ACTION_MSG) {
+		if (licFileMessage.getAction().equals(ActionMessageConstants.LIC_FILE_ACTION_MSG)) {
 			String verified = ActionMessageConstants.LIC_FILE_VFAIL;
 			long timestamp = System.currentTimeMillis();
 
