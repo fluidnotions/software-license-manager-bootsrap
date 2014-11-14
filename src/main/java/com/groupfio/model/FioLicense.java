@@ -39,7 +39,11 @@ public class FioLicense {
 
 	@Transient
 	private String validityPeriodString;
+	
+	@Transient
+	private boolean terminate;
 
+	
 	@Column(name = "activation_date")
 	private Timestamp activationDate;
 	@Transient
@@ -60,6 +64,14 @@ public class FioLicense {
 	private String lastAgentComActionResult;
 
 	public FioLicense() {
+	}
+
+	public boolean isTerminate() {
+		return terminate;
+	}
+
+	public void setTerminate(boolean terminate) {
+		this.terminate = terminate;
 	}
 
 	public String getSerialNumber() {

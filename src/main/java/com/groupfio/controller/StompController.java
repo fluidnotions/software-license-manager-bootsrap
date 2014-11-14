@@ -10,7 +10,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 
-import com.groupfio.pojo.LicFile;
+import com.groupfio.message.pojo.LicFileMessage;
 import com.groupfio.service.VerifyLicFileService;
 
 @Controller
@@ -27,10 +27,10 @@ public class StompController {
 	}
 
 	@MessageMapping("/licfileverify")
-	public void executeVerify(LicFile licFile, Principal principal) {
-		licFile.setSerialnumber(principal.getName());
-		log.debug("LicFile: " + licFile);
-		this.verifyLicFileService.executeVerify(licFile);
+	public void executeVerify(LicFileMessage licFileMessage, Principal principal) {
+		licFileMessage.setSerialNumber(principal.getName());
+		log.debug("LicFileMessage: " + licFileMessage);
+		this.verifyLicFileService.executeVerify(licFileMessage);
 	}
 
 	@MessageExceptionHandler

@@ -5,9 +5,10 @@ import java.util.List;
 import com.groupfio.model.FioLicense;
 
 public interface FioLicenseService {
-	public void add(FioLicense fioLicense);
+	
+	public void create(FioLicense fioLicense);
 
-	public void edit(FioLicense fioLicense);
+	public void update(FioLicense fioLicense);
 
 	public void delete(String serialnumber);
 

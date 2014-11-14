@@ -156,10 +156,16 @@
 							<td><form:input path="licfileCheckSum" /></td>
 						</tr>
 						<tr>
-							<td colspan="2"><input type="submit" name="action"
-								value="Add" /> <input type="submit" name="action" value="Edit" />
-								<input type="submit" name="action" value="Delete" /> <input
-								type="submit" name="action" value="Search" /></td>
+						   <td>Terminate<td> 
+						   <td align="right"><form:checkbox path="terminate" /></td>
+						</tr>
+						<tr>
+							<td colspan="2">
+							    <input type="submit" name="action" value="Search" />
+								<input type="submit" name="action" value="Create" /> 
+								<input type="submit" name="action" value="Update" />
+								<input type="submit" name="action" value="Delete" /> 	
+							</td>
 						</tr>
 					</table>
 				</form:form>

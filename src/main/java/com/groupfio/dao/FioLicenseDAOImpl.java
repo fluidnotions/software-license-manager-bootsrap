@@ -7,8 +7,8 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.groupfio.message.pojo.Message;
 import com.groupfio.model.FioLicense;
-import com.groupfio.pojo.ActionResult;
 
 @Repository
 public class FioLicenseDAOImpl implements FioLicenseDAO {
@@ -23,13 +23,13 @@ public class FioLicenseDAOImpl implements FioLicenseDAO {
 	 */
 
 	@Override
-	public void add(FioLicense fioLicense) {
+	public void create(FioLicense fioLicense) {
 		session.getCurrentSession().save(fioLicense);
 
 	}
 
 	@Override
-	public void edit(FioLicense fioLicense) {
+	public void update(FioLicense fioLicense) {
 		session.getCurrentSession().update(fioLicense);
 
 	}
@@ -54,11 +54,11 @@ public class FioLicenseDAOImpl implements FioLicenseDAO {
 	}
 
 	@Override
-	public void updateFioLicenseForAgentActionResult(ActionResult actionResult) {
-		FioLicense fioLicense = getFioLicence(actionResult.getSerialNumber());
-		fioLicense.setLastAgentComTime(new Timestamp(actionResult.getTimestamp()));
-		fioLicense.setLastAgentComAction(actionResult.getAction());
-		fioLicense.setLastAgentComActionResult(actionResult.getActionResultMsg());
+	public void updateFioLicenseForAgentActionResult(Message message) {
+		FioLicense fioLicense = getFioLicence(message.getSerialNumber());
+		fioLicense.setLastAgentComTime(new Timestamp(message.getTimestamp()));
+		fioLicense.setLastAgentComAction(message.getAction());
+		fioLicense.setLastAgentComActionResult(message.getActionMsg());
 		session.getCurrentSession().update(fioLicense);
 		
 	}

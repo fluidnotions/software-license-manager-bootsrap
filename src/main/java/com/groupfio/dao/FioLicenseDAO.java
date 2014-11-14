@@ -2,14 +2,14 @@ package com.groupfio.dao;
 
 import java.util.List;
 
+import com.groupfio.message.pojo.Message;
 import com.groupfio.model.FioLicense;
-import com.groupfio.pojo.ActionResult;
 
 public interface FioLicenseDAO {
 
-	public void add(FioLicense fioLicense);
+	public void create(FioLicense fioLicense);
 
-	public void edit(FioLicense fioLicense);
+	public void update(FioLicense fioLicense);
 
 	public void delete(String serialnumber);
 
@@ -17,5 +17,5 @@ public interface FioLicenseDAO {
 
 	public List getAllFioLicence();
 	
-	public void updateFioLicenseForAgentActionResult(ActionResult actionResult);
+	public void updateFioLicenseForAgentActionResult(Message message);
 }

@@ -1,10 +1,10 @@
 package com.groupfio.service;
 
-import com.groupfio.pojo.LicFile;
+import com.groupfio.message.pojo.LicFileMessage;
 
 public interface VerifyLicFileService {
 
-	public void executeVerify(LicFile licFile);
+	public void executeVerify(LicFileMessage licFileMessage);
 	/*public void sendVerificationResultNotifications();*/
 
 }

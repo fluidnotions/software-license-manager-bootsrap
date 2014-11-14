@@ -10,16 +10,15 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MimeTypeUtils;
 
 import com.groupfio.dao.FioLicenseDAO;
+import com.groupfio.message.pojo.ActionMessageConstants;
+import com.groupfio.message.pojo.LicFileMessage;
+import com.groupfio.message.pojo.Message;
 import com.groupfio.model.FioLicense;
-import com.groupfio.pojo.LicFile;
-import com.groupfio.pojo.ActionResult;
-import com.groupfio.pojo.LicFile.LicFileAction;
 
 @Service
 public class VerifyLicFileServiceImpl implements VerifyLicFileService {
@@ -32,7 +31,7 @@ public class VerifyLicFileServiceImpl implements VerifyLicFileService {
 
 	private final SimpMessageSendingOperations messagingTemplate;
 
-	private final List<ActionResult> actionResults = new CopyOnWriteArrayList<>();
+	private final List<Message> messages = new CopyOnWriteArrayList<>();
 
 	@Autowired
 	public VerifyLicFileServiceImpl(
@@ -47,34 +46,34 @@ public class VerifyLicFileServiceImpl implements VerifyLicFileService {
 	 */
 	@Override
 	@Transactional
-	public void executeVerify(LicFile licFile) {
-		String serialnumber = licFile.getSerialnumber();
+	public void executeVerify(LicFileMessage licFileMessage) {
+		String serialnumber = licFileMessage.getSerialNumber();
 
 		FioLicense fioLicense = fioLicenseDAO.getFioLicence(serialnumber);
-		ActionResult result = null;
+		Message result = null;
 		if (fioLicense == null) {
-			String payload = "Rejected licFile " + licFile
+			String payload = "Rejected licFile " + licFileMessage
 					+ ". Reason [serialnumber=" + serialnumber
 					+ " not found in database!]";
 			log.error(payload);
 			this.messagingTemplate.convertAndSendToUser(
-					licFile.getSerialnumber(), "/queue/errors", payload);
+					licFileMessage.getSerialNumber(), "/queue/errors", payload);
 			return;
 		}
-		if (licFile.getAction() == LicFileAction.ChecksumAndFileSize) {
-			String verified = LicFile.VFAIL;
+		if (licFileMessage.getAction() == ActionMessageConstants.LIC_FILE_ACTION_MSG) {
+			String verified = LicFileMessage.VFAIL;
 			long timestamp = System.currentTimeMillis();
 
 			// check values from agent against stored values
 			if (fioLicense.getLicfileCheckSum().trim()
-					.equals(licFile.getLicfileCheckSum())
-					&& fioLicense.getLicfileByteSize() == licFile
+					.equals(licFileMessage.getLicfileCheckSum())
+					&& fioLicense.getLicfileByteSize() == licFileMessage
 							.getLicfileByteSize()) {
-				verified = LicFile.VPASS;
+				verified = LicFileMessage.VPASS;
 			}
 
-			 result = new ActionResult(licFile.getSerialnumber(),
-					timestamp, licFile.getAction().name(), verified);
+			 result = new Message(licFileMessage.getSerialNumber(),
+					timestamp, licFileMessage.getAction(), verified);
 			Map<String, Object> map = new HashMap<>();
 			map.put(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON);
 
@@ -84,10 +83,10 @@ public class VerifyLicFileServiceImpl implements VerifyLicFileService {
 
 		} else {
 			String payload = "LicFileAction not set or not implemented! ("
-					+ licFile.getAction() + ")";
+					+ licFileMessage.getAction() + ")";
 			log.error(payload);
 			this.messagingTemplate.convertAndSendToUser(
-					licFile.getSerialnumber(), "/queue/errors", payload);
+					licFileMessage.getSerialNumber(), "/queue/errors", payload);
 		}
 
 		if(result!=null)fioLicenseDAO.updateFioLicenseForAgentActionResult(result);
