@@ -15,4 +15,6 @@ public interface FioLicenseService {
 	public FioLicense getFioLicense(String serialnumber);
 
 	public List getAllFioLicense();
+	
+	public List getAllFioLicenseAdminEventsForSerialNumber(String serialNumber);
 }

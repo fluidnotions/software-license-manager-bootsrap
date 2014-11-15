@@ -79,6 +79,8 @@ public class FioLicenseController {
 					: new FioLicense();
 			break;
 		}
+		//get associated FioLicenseAdminEvent entities and add as list if there are any
+		map.put("fioLicenseAdminEvents", fioLicenseService.getAllFioLicenseAdminEventsForSerialNumber(fioLicense.getSerialNumber()));
 		map.put("validityPeriodOptionList", validityPeriodOptionList);
 		map.put("fioLicense", fioLicenseResult);
 		

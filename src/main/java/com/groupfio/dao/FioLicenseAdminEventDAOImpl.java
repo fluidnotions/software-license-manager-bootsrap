@@ -1,6 +1,7 @@
 package com.groupfio.dao;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
@@ -36,6 +37,13 @@ public class FioLicenseAdminEventDAOImpl implements FioLicenseAdminEventDAO {
 		Query q = session.getCurrentSession().createQuery("delete FioLicenseAdminEvent where eventType = :eventType and hasBeenApplied = false");
 		q.setString("eventType", FioLicenseAdminEvent.EventType.SUSPEND.name());
 		q.executeUpdate();
+	}
+
+	@Override
+	public List getAllFioLicenseAdminEventsForSerialNumber(String serialNumber) {
+		Query q = session.getCurrentSession().createQuery("FioLicenseAdminEvent where serialNumber = :serialNumber");
+		q.setString("serialNumber", serialNumber);
+		return q.list();
 	}
 
 }

@@ -4,15 +4,14 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -52,7 +51,14 @@ public class FioLicenseServiceImpl implements FioLicenseService {
 	@Transactional
 	public void create(FioLicense fioLicense) {
 		// convert form types to entity types
-		covertFormFieldStringToTimestampAndUpdateFioLicense(fioLicense);
+		Timestamp activationDate = covertFormFieldStringToTimestamp(fioLicense.getActivationDateString());
+		log.debug("create: activationDate: "+activationDate);
+		String validityPeriodString = fioLicense.getValidityPeriodString();
+		log.debug("create: validityPeriodString: "+validityPeriodString);
+		Timestamp expirationDate = calculateExpirationTimestampEntityValueFromFormData(activationDate, validityPeriodString);
+		log.debug("create: expirationDate: "+expirationDate.toString());
+		fioLicense.setActivationDate(activationDate);
+		fioLicense.setExpirationDate(expirationDate);
 		
 		fioLicenseDAO.create(fioLicense);
 		
@@ -71,7 +77,6 @@ public class FioLicenseServiceImpl implements FioLicenseService {
 	@Transactional
 	public void update(FioLicense fioLicense) {
 		// convert form types to entity types
-		covertFormFieldStringToTimestampAndUpdateFioLicense(fioLicense);
 		Message terminate = null;
 
 		// immediate vs future termination is important here
@@ -83,11 +88,12 @@ public class FioLicenseServiceImpl implements FioLicenseService {
 			// log 2 admin Event types extension and type terminate
 			// a scheduled job runs at midnight daily searching the
 			// fioLicenseAdminEvent
-			// table for SUSPENSION, hasBeenApplied=false, application date
+			// table for SUSPEND, hasBeenApplied=false, application date
 			// match & then sends terminate instruction to the client
 			Timestamp newExpirationDate = calculateExpirationTimestampEntityValueFromFormData(
 					fioLicense.getExpirationDate(),
 					fioLicense.getValidityPeriodString());
+			
 			fioLicense.setExpirationDate(newExpirationDate);
 
 			fioLicenseAdminEventDAO
@@ -95,7 +101,7 @@ public class FioLicenseServiceImpl implements FioLicenseService {
 							fioLicense.getSerialNumber(),
 							FioLicenseAdminEvent.EventType.PERIOD_EXTENSION
 									.name(),
-							"period has been extended",
+							"period has been extended by "+fioLicense.getValidityPeriodString(),
 							"a suspend admin event was created with a future application date",
 							null, fioLicense.getByUsername(), true);
 			//when adding a future suspend event we need to delete any existing future suspend event
@@ -136,6 +142,11 @@ public class FioLicenseServiceImpl implements FioLicenseService {
 		}
 
 	}
+	
+	@Transactional
+	public List getAllFioLicenseAdminEventsForSerialNumber(String serialNumber) {
+		return fioLicenseAdminEventDAO.getAllFioLicenseAdminEventsForSerialNumber(serialNumber);
+	}
 
 	@Transactional
 	public void delete(String serialnumber) {
@@ -159,38 +170,21 @@ public class FioLicenseServiceImpl implements FioLicenseService {
 	public List getAllFioLicense() {
 		return fioLicenseDAO.getAllFioLicence();
 	}
-
-	private void covertFormFieldStringToTimestampAndUpdateFioLicense(
-			FioLicense fioLicense) {
-
-		if (fioLicense.getActivationDateString() != null) {
-			Timestamp activationDate = covertFormFieldStringToTimestamp(fioLicense
-					.getActivationDateString());
-			String validityPeriodString = fioLicense.getValidityPeriodString();
-			Timestamp expirationDate = calculateExpirationTimestampEntityValueFromFormData(
-					activationDate, validityPeriodString);
-			fioLicense.setActivationDate(activationDate);
-			fioLicense.setExpirationDate(expirationDate);
-		} else {
-			log.debug("activationDateString is null");
-		}
-
-	}
-
+	
 	private Timestamp calculateExpirationTimestampEntityValueFromFormData(
-			Timestamp activationDate, String validityPeriodString) {
+			Timestamp date, String validityPeriodString) {
 		Timestamp expirationDate = null;
 
 		log.debug("validityPeriodString: " + validityPeriodString);
 		switch (validityPeriodString) {
 		case "6 months":
-			expirationDate = addMonthsToTimestamp(6, activationDate);
+			expirationDate = addMonthsToTimestamp(6, date);
 			break;
 		case "1 year":
-			expirationDate = addMonthsToTimestamp(12, activationDate);
+			expirationDate = addMonthsToTimestamp(12, date);
 			break;
 		case "2 years":
-			expirationDate = addMonthsToTimestamp(24, activationDate);
+			expirationDate = addMonthsToTimestamp(24, date);
 			break;
 		}
 
@@ -199,25 +193,16 @@ public class FioLicenseServiceImpl implements FioLicenseService {
 	}
 
 	private Timestamp addMonthsToTimestamp(int months, Timestamp ts) {
-		log.debug("months to add: " + months);
-		int years = 0;
-		if (months > 12) {
-			years = months / 12;
-			log.debug("months/12: " + years);
-			months = months % 12;
-			log.debug("remainder months: " + months);
-
+		Timestamp adjusted = null;
+		if (ts!=null) {
+			log.debug("months to add: " + months);
+			DateTime dt = new DateTime(ts);
+			adjusted = new Timestamp(dt.plusMonths(months).toDate().getTime());
+			log.debug("initial: " + ts.toString() + ", adjusted: "
+					+ adjusted.toString());
+		}else{
+			log.error("addMonthsToTimestamp Timestamp is null");
 		}
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeZone(TimeZone.getDefault());
-		cal.setTime(ts);
-		cal.add(Calendar.MONTH, months);
-		if (years > 0) {
-			cal.add(Calendar.YEAR, years);
-		}
-		Timestamp adjusted = new Timestamp(cal.getTime().getTime());
-		log.debug("initial: " + ts.toString() + ", adjusted: "
-				+ adjusted.toString());
 		return adjusted;
 	}
 

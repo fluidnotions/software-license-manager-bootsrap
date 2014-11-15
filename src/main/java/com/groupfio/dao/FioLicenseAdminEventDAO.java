@@ -1,6 +1,7 @@
 package com.groupfio.dao;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public interface FioLicenseAdminEventDAO {
 
@@ -13,4 +14,6 @@ public interface FioLicenseAdminEventDAO {
 			boolean hasBeenApplied);
 
 	void deleteAnyExistingFutureSuspendAdminEvents();
+
+	public List getAllFioLicenseAdminEventsForSerialNumber(String serialNumber);
 }
