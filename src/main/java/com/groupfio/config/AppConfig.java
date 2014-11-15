@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import com.groupfio.model.FioLicense;
+import com.groupfio.model.FioLicenseAdminEvent;
 
 @Configuration
 @ComponentScan("com.groupfio")
@@ -57,6 +58,7 @@ public class AppConfig {
     	LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(dataSource);
     	sessionBuilder.addProperties(getHibernateProperties());
     	sessionBuilder.addAnnotatedClasses(FioLicense.class);
+    	sessionBuilder.addAnnotatedClasses(FioLicenseAdminEvent.class);
     	return sessionBuilder.buildSessionFactory();
     }
     

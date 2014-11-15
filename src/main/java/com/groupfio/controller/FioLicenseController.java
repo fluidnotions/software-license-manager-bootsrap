@@ -1,5 +1,6 @@
 package com.groupfio.controller;
 
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -52,9 +53,11 @@ public class FioLicenseController {
 	@RequestMapping(value = "/fioLicense.do", method = RequestMethod.POST)
 	public String doActions(@ModelAttribute FioLicense fioLicense,
 			BindingResult result, @RequestParam String action,
-			Map<String, Object> map) {
+			Map<String, Object> map, Principal principal) {
 		
 		FioLicense fioLicenseResult = new FioLicense();
+		//this a transient field to be used in logging admin evnent
+		fioLicenseResult.setByUsername(principal.getName());
 		switch (action.toLowerCase()) { // only in Java7 you can put String in
 										// switch
 		case "create":

@@ -96,7 +96,7 @@ public class CheckActionServiceImpl implements CheckActionService {
 	@Override
 	public void executeCheckIsEnabled(Message message) {
 		FioLicense fioLicense = fioLicenseDAO.getFioLicence(message.getSerialNumber());
-		if(fioLicense.getIsEnabled().equals("FALSE")){
+		if(fioLicense.isEnabled()){
 			long timestamp = System.currentTimeMillis();
 			Message result = new Message(message.getSerialNumber(),
 					timestamp, ActionMessageConstants.TERM_ACTION_MSG, fioLicense.toString());

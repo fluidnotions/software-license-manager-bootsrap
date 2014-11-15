@@ -40,8 +40,6 @@
 			"columns" : [ {
 				"data" : "serialNumber"
 			}, {
-				"data" : "organizationName"
-			}, {
 				"data" : "appVersion"
 			}, {
 				"data" : "activationDate"
@@ -119,10 +117,6 @@
 							<td><form:input path="serialNumber" /></td>
 						</tr>
 						<tr>
-							<td>Organization Name</td>
-							<td><form:input path="organizationName" /></td>
-						</tr>
-						<tr>
 							<td>Contact Name</td>
 							<td><form:input path="contactName" /></td>
 						</tr>
@@ -135,7 +129,7 @@
 							<td><form:input path="appVersion" /></td>
 						</tr>
 						<tr>
-							<td>Validity Period</td>
+							<td>Period (initial/extension)</td>
 							<!-- period selector -->
 							<td><form:select path="validityPeriodString">
 									<form:option value="NONE" label="--- Select ---" />
@@ -156,8 +150,8 @@
 							<td><form:input path="licfileCheckSum" /></td>
 						</tr>
 						<tr>
-						   <td>Terminate<td> 
-						   <td align="right"><form:checkbox path="terminate" /></td>
+						   <td>Suspend Now<td> 
+						   <td align="right"><form:checkbox path="suspend" /></td>
 						</tr>
 						<tr>
 							<td colspan="2">
@@ -179,7 +173,6 @@
 					<thead>
 						<tr>
 							<th>Serial Number</th>
-							<th>Organization Name</th>
 							<th>Version</th>
 							<th>Activation Date</th>
 							<th>Expiration Date</th>

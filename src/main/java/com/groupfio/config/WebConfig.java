@@ -35,7 +35,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	@Bean
 	public ObjectMapper getObjectMapper() {
 		Jackson2ObjectMapperFactoryBean j2omfb = new Jackson2ObjectMapperFactoryBean();
-		j2omfb.setSimpleDateFormat("yy-MM-dd HH:mm:ss");
+		j2omfb.setSimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 		j2omfb.afterPropertiesSet();
 
 		return j2omfb.getObject();
