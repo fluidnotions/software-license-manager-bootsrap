@@ -166,7 +166,8 @@ public class FioLicenseAdminEvent {
 	public enum EventType{
 		PERIOD_EXTENSION,
 		LICENSE_CREATE,
-		SUSPEND
+		SUSPEND,
+		UNSUSPEND
 		
 	}
 	

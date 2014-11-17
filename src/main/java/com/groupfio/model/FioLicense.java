@@ -13,32 +13,25 @@ public class FioLicense {
 	@Id
 	@Column(name = "serial_number")
 	private String serialNumber;
-	
+
 	@Column(name = "contact_name")
 	private String contactName;
-	
+
 	@Column(name = "current_status")
 	private String currentStatus;
-	
+
 	@Column(name = "is_enabled")
 	private boolean isEnabled;
-	
+
 	@Column(name = "app_version")
 	private String appVersion;
 
 	@Column(name = "email")
 	private String email;
-	
-
-	@Transient
-	private String validityPeriodString;
-	
-	@Transient
-	private boolean suspend;
 
 	@Column(name = "activation_date")
 	private Timestamp activationDate;
-	
+
 	@Transient
 	private String activationDateString;
 
@@ -47,21 +40,18 @@ public class FioLicense {
 
 	@Column(name = "lic_file_byte_size")
 	private int licfileByteSize;
-	
+
 	@Column(name = "lic_file_checksum")
 	private String licfileCheckSum;
-	
+
 	@Column(name = "last_agent_com_time")
 	private Timestamp lastAgentComTime;
-	
+
 	@Column(name = "last_agent_com_action")
 	private String lastAgentComAction;
-	
+
 	@Column(name = "last_agent_com_action_result")
 	private String lastAgentComActionResult;
-	
-	@Transient
-	private String byUsername;
 
 	public FioLicense() {
 	}
@@ -114,14 +104,6 @@ public class FioLicense {
 		this.email = email;
 	}
 
-	public String getValidityPeriodString() {
-		return validityPeriodString;
-	}
-
-	public void setValidityPeriodString(String validityPeriodString) {
-		this.validityPeriodString = validityPeriodString;
-	}
-
 	public Timestamp getActivationDate() {
 		return activationDate;
 	}
@@ -140,14 +122,6 @@ public class FioLicense {
 
 	public Timestamp getExpirationDate() {
 		return expirationDate;
-	}
-
-	public boolean isSuspend() {
-		return suspend;
-	}
-
-	public void setSuspend(boolean suspend) {
-		this.suspend = suspend;
 	}
 
 	public void setExpirationDate(Timestamp expirationDate) {
@@ -194,15 +168,4 @@ public class FioLicense {
 		this.lastAgentComActionResult = lastAgentComActionResult;
 	}
 
-	public String getByUsername() {
-		return byUsername;
-	}
-
-	public void setByUsername(String byUsername) {
-		this.byUsername = byUsername;
-	}
-
-	
-	
-	
 }

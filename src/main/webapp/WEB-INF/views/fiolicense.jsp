@@ -9,29 +9,27 @@
 <meta http-equiv="Cache-Control"
 	content="no-store, no-cache, must-revalidate, max-age=0">
 <script
-	src="<c:url value="http://code.jquery.com/jquery-1.11.1.min.js" />"></script>
+	src='<c:url value="http://code.jquery.com/jquery-1.11.1.min.js" />' type="text/javascript"></script>
 <script
-	src="<c:url value="http://code.jquery.com/ui/1.11.2/jquery-ui.min.js" />"></script>
+	src='<c:url value="http://code.jquery.com/ui/1.11.2/jquery-ui.min.js" />' type="text/javascript"></script>
 <script
-	src="<c:url value="http://cdn.datatables.net/1.10.3/js/jquery.dataTables.js" />"></script>
+	src='<c:url value="http://cdn.datatables.net/1.10.3/js/jquery.dataTables.js" />' type="text/javascript"></script>
 <link
-	href="<c:url value="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />"
+	href='<c:url value="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />'
 	rel="stylesheet">
 <link
-	href="<c:url value="http://cdn.datatables.net/plug-ins/380cb78f450/integration/jqueryui/dataTables.jqueryui.css" />"
+	href='<c:url value="http://cdn.datatables.net/plug-ins/380cb78f450/integration/jqueryui/dataTables.jqueryui.css" />'
+	rel="stylesheet">
+<link href='<c:url value="/resources/common/main.css" />'
+	rel="stylesheet">
+<link
+	href='<c:url value="/resources/lib/bootstrap/css/bootstrap.css" />'
 	rel="stylesheet">
 
-
-<link
-	href="<c:url value="/resources/lib/bootstrap/css/bootstrap.css" />"
-	rel="stylesheet">
-<link href="<c:url value="/resources/common/main.css" />"
-	rel="stylesheet">
 
 <title>License Manager</title>
-<script>
+<script type="text/javascript">
 	$(document).ready(function() {
-
 		var table = $('#licenses').DataTable({
 			"ajax" : {
 				"url" : "getAllFioLicense.json",
@@ -58,21 +56,9 @@
 			]
 		});
 
-		table.on('click', 'tr', function(event) {
-			var data = table.fnGetData(this);
-
-			$("div.debugmsg").html(data);
-
-		}).on('dblclick', 'tr', function(event) {
-			var data = table.fnGetData(this);
-
-			$("div.debugmsg").html(data);
-			$(this).css('background', '#000');
-		});
-
 		setInterval(function() {
 			table.ajax.reload();
-		}, 3000);
+		}, 5000); 
 
 	});
 
@@ -146,8 +132,8 @@
 								<td><form:input path="licfileCheckSum" /></td>
 							</tr>
 							<tr>
-								<td>Suspend Now
-								<td>
+								<td>Suspend (now)</td>
+								<td></td>
 								<td align="right"><form:checkbox path="suspend" /></td>
 							</tr>
 							<tr>
@@ -157,43 +143,43 @@
 								<td colspan="2"><input type="submit" name="action"
 									value="Search" /> <input type="submit" name="action"
 									value="Create" /> <input type="submit" name="action"
-									value="Update" /> <input type="submit" name="action"
-									value="Delete" /></td>
+									value="Update" /> <input type="submit" name="action" value="Delete" />
+								</td>
 							</tr>
 						</table>
 					</form:form>
 				</div>
+				<div id="right">
+					<c:if test="${!empty fioLicenseAdminEvents}">
+						<table table id="evs" cellspacing="0"  border="1" width="100%">
+							<thead>
+								<tr>
+									<td>Type</td>
+									<td>Details</td>
+									<td>Application</td>
+									<td>User</td>
+								</tr>
+							</thead>
+							<tbody>
+								<c:forEach var="ev" items="${fioLicenseAdminEvents}">
+									<tr>
+										<td>${ev.eventType}</td>
+										<td>${ev.eventDetails}</td>
+										<td>${ev.applicationTimestamp}</td>
+										<td>${ev.byUsername}</td>
+									</tr>
+								</c:forEach>
+							</tbody>
+						</table>
+					</c:if>
+				</div>
 			</div>
-			<dir id="right">
-			<c:if test="${!empty fioLicenseAdminEvents}">
-				<table table id="evs" cellspacing="0" width="50%">
-					<thead>
-						<tr>
-							<td>Type</td>
-							<td>Details</td>
-							<td>Application</td>
-						</tr>
-					</thead>
-					<tbody>
-
-						<c:forEach var="ev" items="${fioLicenseAdminEvents}">
-							<tr>
-
-								<td>${ev.eventType}</td>
-								<td>${ev.eventDetails}</td>
-								<td>${ev.applicationTimestamp}</td>
-
-							</tr>
-						</c:forEach>
-					</tbody>
-				</table>
-			</dir>
-			</c:if>
 		</div>
-		<div id="list">
-			<h3 class="muted">License Table</h3>
-			<div id="main-content">
-				<div class="demo-debugmsg"></div>
+
+
+		<div id="main-content">
+			<div id="list">
+				<h3 class="muted">License Table</h3>
 				<table id="licenses" cellspacing="0" width="100%">
 					<thead>
 						<tr>

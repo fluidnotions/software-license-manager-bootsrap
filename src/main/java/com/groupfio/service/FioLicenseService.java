@@ -2,17 +2,17 @@ package com.groupfio.service;
 
 import java.util.List;
 
-import com.groupfio.model.FioLicense;
+import com.groupfio.model.FioLicenseFormBean;
 
 public interface FioLicenseService {
 	
-	public void create(FioLicense fioLicense);
+	public void create(FioLicenseFormBean fioLicense);
 
-	public void update(FioLicense fioLicense);
+	public void update(FioLicenseFormBean fioLicense);
 
 	public void delete(String serialnumber);
 
-	public FioLicense getFioLicense(String serialnumber);
+	public FioLicenseFormBean getFioLicenseFormBean(String serialnumber);
 
 	public List getAllFioLicense();
 	

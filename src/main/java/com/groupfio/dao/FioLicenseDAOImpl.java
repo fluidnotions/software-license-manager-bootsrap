@@ -3,6 +3,7 @@ package com.groupfio.dao;
 import java.sql.Timestamp;
 import java.util.List;
 
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -61,6 +62,22 @@ public class FioLicenseDAOImpl implements FioLicenseDAO {
 		fioLicense.setLastAgentComActionResult(message.getActionMsg());
 		session.getCurrentSession().update(fioLicense);
 		
+	}
+	
+	@Override
+	public Timestamp getFioLicenceCurrentExpiryDate(String serialNumber){//statelessSession needs to be used here else 
+		Query q = session.openStatelessSession().createQuery("from FioLicense where serialNumber = :serialNumber");
+		q.setString("serialNumber", serialNumber);
+		FioLicense fioLicense = (FioLicense) q.uniqueResult();
+		return fioLicense.getExpirationDate();
+	}
+	
+	@Override
+	public boolean getFioLicenceCurrentIsEnabled(String serialNumber){//statelessSession needs to be used here else 
+		Query q = session.openStatelessSession().createQuery("from FioLicense where serialNumber = :serialNumber");
+		q.setString("serialNumber", serialNumber);
+		FioLicense fioLicense = (FioLicense) q.uniqueResult();
+		return fioLicense.isEnabled();
 	}
 
 }

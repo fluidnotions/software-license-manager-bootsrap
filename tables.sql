@@ -23,17 +23,18 @@ CREATE TABLE `fiolicense` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='poc licence table';
 
 CREATE TABLE `fiolicenseadminevent` (
-  `eventtimestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `eventtimestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `eventtype` varchar(45) DEFAULT NULL,
-  `eventdetails` varchar(45) DEFAULT NULL,
+  `eventdetails` varchar(100) DEFAULT NULL,
   `eventcomment` varchar(100) DEFAULT NULL,
-  `applicationtimestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `applicationtimestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `hasbeenapplied` tinyint(1) DEFAULT NULL,
   `byusername` varchar(45) DEFAULT NULL,
   `serialnumber` varchar(45) NOT NULL,
   `pk` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`pk`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=99 DEFAULT CHARSET=utf8;
+
 
 
 

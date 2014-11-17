@@ -21,10 +21,13 @@ body {
   text-align: right;
 }
 
-.table td.trade-buttons {
-  text-align: center;
-}
 
-.table tfoot {
+.table thead {
   font-weight: bold;
 }
+
+
+
+
+
+

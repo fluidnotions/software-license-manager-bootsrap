@@ -13,7 +13,9 @@ public interface FioLicenseAdminEventDAO {
 			String byUsername, 
 			boolean hasBeenApplied);
 
-	void deleteAnyExistingFutureSuspendAdminEvents();
-
 	public List getAllFioLicenseAdminEventsForSerialNumber(String serialNumber);
+
+	void deleteAnyExistingFutureSuspendAdminEvents(String serialNumber);
+
+	void deleteAllAdminEvents(String serialNumber);
 }

@@ -12,7 +12,7 @@
 	
 	<!-- Application Loggers -->
 	<logger name="com.groupfio">
-		<level value="info" />
+		<level value="debug" />
 	</logger>
 	
 	<logger name="com.groupfio.websocket">
