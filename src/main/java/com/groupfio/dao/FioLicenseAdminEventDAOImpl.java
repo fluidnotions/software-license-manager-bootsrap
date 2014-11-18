@@ -9,12 +9,14 @@ import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.groupfio.model.FioLicense;
 import com.groupfio.model.FioLicenseAdminEvent;
 import com.groupfio.service.FioLicenseServiceImpl;
 
 @Repository
+@Transactional
 public class FioLicenseAdminEventDAOImpl implements FioLicenseAdminEventDAO {
 	
 	private static final Log log = LogFactory
@@ -66,19 +68,22 @@ public class FioLicenseAdminEventDAOImpl implements FioLicenseAdminEventDAO {
 		q.setString("serialNumber", serialNumber);
 		return q.list();
 	}
+	
+	@Override
+	public void update(FioLicenseAdminEvent fioLicenseAdminEvent) {
+		session.getCurrentSession().update(fioLicenseAdminEvent);
+		
+	}
 
 	@Override
 	public List<FioLicenseAdminEvent> getHasntBeenAppliedSuspendFioLicenseAdminEvents(Timestamp applicationTimestamp){
-		Query q = session.openStatelessSession().createQuery("from FioLicenseAdminEvent where applicationTimestamp = :applicationTimestamp and hasBeenApplied = false");
+		Query q = session.getCurrentSession().createQuery("from FioLicenseAdminEvent where applicationTimestamp = :applicationTimestamp and eventType = :eventType and hasBeenApplied = false");
 		q.setTimestamp("applicationTimestamp", applicationTimestamp);
+		q.setString("eventType", FioLicenseAdminEvent.EventType.SUSPEND.name());
 		return q.list();
 	}
 
-	@Override
-	public void update(FioLicenseAdminEvent fioLicenseAdminEvent) {
-		session.openStatelessSession().update(fioLicenseAdminEvent);
-		
-	}
+	
 	
 	
 }

@@ -23,8 +23,6 @@ import com.groupfio.model.FioLicenseAdminEvent;
 @Configuration
 @ComponentScan("com.groupfio")
 @EnableTransactionManagement
-@EnableAsync
-@EnableScheduling
 public class AppConfig {
 	
 	

@@ -49,7 +49,7 @@ public class FioLicenseServiceImpl implements FioLicenseService {
 	@Autowired
 	private FioLicenseAdminEventDAO fioLicenseAdminEventDAO;
 
-	@Transactional
+	
 	public void create(FioLicenseFormBean formBean) {
 		FioLicense fioLicenseEntity = FioLicenseFormBean
 				.entityFromBackingBean(formBean);
@@ -85,7 +85,7 @@ public class FioLicenseServiceImpl implements FioLicenseService {
 
 	}
 
-	@Transactional
+	
 	public void update(FioLicenseFormBean formBean) {
 		FioLicense fioLicenseEntity = FioLicenseFormBean
 				.entityFromBackingBean(formBean);
@@ -172,20 +172,20 @@ public class FioLicenseServiceImpl implements FioLicenseService {
 
 	}
 
-	@Transactional
+	
 	public List getAllFioLicenseAdminEventsForSerialNumber(String serialNumber) {
 		return fioLicenseAdminEventDAO
 				.getAllFioLicenseAdminEventsForSerialNumber(serialNumber);
 	}
 
-	@Transactional
+	
 	public void delete(String serialnumber) {
 		fioLicenseAdminEventDAO.deleteAllAdminEvents(serialnumber);
 		fioLicenseDAO.delete(serialnumber);
 
 	}
 
-	@Transactional
+	
 	public FioLicenseFormBean getFioLicenseFormBean(String serialnumber) {
 		FioLicense fl = fioLicenseDAO.getFioLicence(serialnumber);
 		FioLicenseFormBean formBean = FioLicenseFormBean.newFormBackingBean(fl);
@@ -201,7 +201,7 @@ public class FioLicenseServiceImpl implements FioLicenseService {
 		return formBean;
 	}
 
-	@Transactional
+	
 	public List getAllFioLicense() {
 		return fioLicenseDAO.getAllFioLicence();
 	}

@@ -43,14 +43,12 @@
 				"data" : "activationDate"
 			}, {
 				"data" : "expirationDate"
-			},
-			/* { "data": "lastAgentComAction" },
-			{ "data": "licfileByteSize" },
-			{ "data": "licfileCheckSum" }, */
-			{
+			}, {
 				"data" : "lastAgentComActionResult"
 			}, {
 				"data" : "lastAgentComTime"
+			}, {
+				"data" : "enabled"
 			}
 
 			]
@@ -58,8 +56,8 @@
 
 		setInterval(function() {
 			table.ajax.reload();
-		}, 5000); 
-
+		}, 5000);  
+		
 	});
 
 	$(function() {
@@ -187,11 +185,9 @@
 							<th>Version</th>
 							<th>Activation Date</th>
 							<th>Expiration Date</th>
-							<!-- <th>Action</th>
-							<th>File Size</th>
-							<th>Checksum</th> -->
 							<th>Result</th>
 							<th>Last Activity</th>
+							<th>Enabled</th>
 						</tr>
 					</thead>
 				</table>

@@ -19,7 +19,17 @@
 		<level value="trace" />
 	</logger>
 	
+	
+	
+	
 	<!-- 3rdparty Loggers -->
+	<!-- <logger name="org.hibernate.SQL">
+		<level value="debug" />
+	</logger>
+	<logger name="org.hibernate.type">
+		<level value="trace" />
+	</logger> -->
+	
 	<logger name="org.springframework.core">
 		<level value="info" />
 	</logger>

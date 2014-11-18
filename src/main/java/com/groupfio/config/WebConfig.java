@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -17,6 +19,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Configuration
 @ComponentScan("com.groupfio")
 @EnableWebMvc
+@EnableAsync
+@EnableScheduling
 public class WebConfig extends WebMvcConfigurerAdapter {
 
 	@Override
