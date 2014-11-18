@@ -12,6 +12,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
@@ -21,6 +23,8 @@ import com.groupfio.model.FioLicenseAdminEvent;
 @Configuration
 @ComponentScan("com.groupfio")
 @EnableTransactionManagement
+@EnableAsync
+@EnableScheduling
 public class AppConfig {
 	
 	

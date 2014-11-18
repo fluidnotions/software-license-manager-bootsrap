@@ -10,6 +10,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.groupfio.model.FioLicense;
 import com.groupfio.model.FioLicenseAdminEvent;
 import com.groupfio.service.FioLicenseServiceImpl;
 
@@ -66,4 +67,18 @@ public class FioLicenseAdminEventDAOImpl implements FioLicenseAdminEventDAO {
 		return q.list();
 	}
 
+	@Override
+	public List<FioLicenseAdminEvent> getHasntBeenAppliedSuspendFioLicenseAdminEvents(Timestamp applicationTimestamp){
+		Query q = session.openStatelessSession().createQuery("from FioLicenseAdminEvent where applicationTimestamp = :applicationTimestamp and hasBeenApplied = false");
+		q.setTimestamp("applicationTimestamp", applicationTimestamp);
+		return q.list();
+	}
+
+	@Override
+	public void update(FioLicenseAdminEvent fioLicenseAdminEvent) {
+		session.openStatelessSession().update(fioLicenseAdminEvent);
+		
+	}
+	
+	
 }
