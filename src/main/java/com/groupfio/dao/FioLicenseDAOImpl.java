@@ -19,12 +19,6 @@ public class FioLicenseDAOImpl implements FioLicenseDAO {
 	@Autowired
 	private SessionFactory session;
 
-	/*
-	 * private SessionFactory session;
-	 * 
-	 * public void setSessionFactory(SessionFactory sf){ this.session = sf; }
-	 */
-
 	@Override
 	public void create(FioLicense fioLicense) {
 		session.getCurrentSession().save(fioLicense);

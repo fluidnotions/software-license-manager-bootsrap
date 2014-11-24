@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MimeTypeUtils;
 
-import com.groupfio.dao.FioLicenseDAO;
+import com.groupfio.dao.FioLicenseActionUpdateDAO;
 import com.groupfio.message.pojo.ActionMessageConstants;
 import com.groupfio.message.pojo.LicFileMessage;
 import com.groupfio.message.pojo.Message;
@@ -26,8 +26,9 @@ public class CheckActionServiceImpl implements CheckActionService {
 	private static final Log log = LogFactory
 			.getLog(CheckActionServiceImpl.class);
 
+
 	@Autowired
-	private FioLicenseDAO fioLicenseDAO;
+	private FioLicenseActionUpdateDAO fioLicenseActionUpdateDAO;
 
 	private final SimpMessageSendingOperations messagingTemplate;
 
@@ -50,7 +51,7 @@ public class CheckActionServiceImpl implements CheckActionService {
 		log.debug("licFileMessage: "+licFileMessage.toString());
 		String serialnumber = licFileMessage.getSerialNumber();
 
-		FioLicense fioLicense = fioLicenseDAO.getFioLicence(serialnumber);
+		FioLicense fioLicense = fioLicenseActionUpdateDAO.getFioLicence(serialnumber);
 		Message result = null;
 		if (fioLicense == null) {
 			String payload = "Rejected licFile " + licFileMessage
@@ -81,6 +82,8 @@ public class CheckActionServiceImpl implements CheckActionService {
 			log.debug("Sending verified result: " + verified);
 			this.messagingTemplate.convertAndSendToUser(
 					result.getSerialNumber(), "/queue/results", result, map);
+			
+			fioLicenseActionUpdateDAO.updateFioLicenseForAgentActionResult(result);
 
 		} else {
 			String payload = "LicFileAction not set or not implemented! ("
@@ -90,12 +93,11 @@ public class CheckActionServiceImpl implements CheckActionService {
 					licFileMessage.getSerialNumber(), "/queue/errors", payload);
 		}
 
-		if(result!=null)fioLicenseDAO.updateFioLicenseForAgentActionResult(result);
 	}
 
 	@Override
 	public void executeCheckIsEnabled(Message message) {
-		FioLicense fioLicense = fioLicenseDAO.getFioLicence(message.getSerialNumber());
+		FioLicense fioLicense = fioLicenseActionUpdateDAO.getFioLicence(message.getSerialNumber());
 		if(!fioLicense.isEnabled()){
 			long timestamp = System.currentTimeMillis();
 			Message result = new Message(message.getSerialNumber(),

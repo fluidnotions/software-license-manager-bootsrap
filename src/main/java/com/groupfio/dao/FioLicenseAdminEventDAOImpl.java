@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.groupfio.model.FioLicense;
 import com.groupfio.model.FioLicenseAdminEvent;
-import com.groupfio.service.FioLicenseServiceImpl;
 
 @Repository
 @Transactional
