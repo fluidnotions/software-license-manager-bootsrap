@@ -7,7 +7,14 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
+
 @Entity
+@DynamicInsert
+@DynamicUpdate
+@SelectBeforeUpdate 
 public class FioLicense {
 
 	@Id

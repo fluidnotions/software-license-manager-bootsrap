@@ -53,14 +53,14 @@ public class FioLicenseFormBean {
 	public static FioLicense entityFromBackingBean(FioLicenseFormBean form) {
 		FioLicense ent = new FioLicense();
 		
-		ent.setActivationDate(form.getActivationDate());
-		ent.setActivationDateString(form.getActivationDateString());
+		//ent.setActivationDate(form.getActivationDate());
+		ent.setActivationDateString(form.getActivationDateString());	
 		ent.setAppVersion(form.getAppVersion());
 		ent.setContactName(form.getContactName());
 		ent.setCurrentStatus(form.getCurrentStatus());
 		ent.setEmail(form.getEmail());
 		ent.setEnabled(form.isEnabled());
-		ent.setExpirationDate(form.getExpirationDate());
+		//ent.setExpirationDate(form.getExpirationDate());
 		ent.setLastAgentComAction(form.getLastAgentComAction());
 		ent.setLastAgentComActionResult(form.getLastAgentComActionResult());
 		ent.setLastAgentComTime(form.getLastAgentComTime());

@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MimeTypeUtils;
 
 import com.groupfio.dao.FioLicenseAdminEventDAO;
@@ -90,6 +89,9 @@ public class FioLicenseServiceImpl implements FioLicenseService {
 	public void update(FioLicenseFormBean formBean) {
 		FioLicense fioLicenseEntity = FioLicenseFormBean
 				.entityFromBackingBean(formBean);
+		FioLicense retainDates = fioLicenseDAO.getFioLicence(formBean.getSerialNumber());
+		fioLicenseEntity.setActivationDate(retainDates.getActivationDate());
+		fioLicenseEntity.setExpirationDate(retainDates.getExpirationDate());
 		// convert form types to entity types
 		Message terminate = null;
 
