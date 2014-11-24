@@ -54,15 +54,19 @@
 			]
 		});
 
-		setInterval(function() {
+		/* setInterval(function() {
 			table.ajax.reload();
-		}, 5000);  
+		}, 5000);   */
+		
+		/* $( "#" ).accordion({ collapsible: true }); */
 		
 	});
 
 	$(function() {
 		$("#datepicker").datepicker();
 	});
+	
+	
 
 	$(function() {
 		$(".btn").button().click(function(event) {

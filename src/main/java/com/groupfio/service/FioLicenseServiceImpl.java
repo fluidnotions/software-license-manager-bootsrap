@@ -66,6 +66,7 @@ public class FioLicenseServiceImpl implements FioLicenseService {
 		log.debug("create: expirationDate: " + expirationDate.toString());
 		fioLicenseEntity.setActivationDate(activationDate);
 		fioLicenseEntity.setExpirationDate(expirationDate);
+		fioLicenseEntity.setEnabled(true);
 
 		fioLicenseDAO.create(fioLicenseEntity);
 
