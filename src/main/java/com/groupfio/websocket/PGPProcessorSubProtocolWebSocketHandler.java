@@ -51,7 +51,21 @@ public class PGPProcessorSubProtocolWebSocketHandler extends SubProtocolWebSocke
 	 */
 	@Override
 	public void handleMessage(Message<?> message) throws MessagingException {
-		// TODO Auto-generated method stub
+		/*TextMessage textMessage = (TextMessage) message;
+		log.debug("INBOUND: handleMessage: textMessage payload:" + textMessage.getPayload());
+		if (!textMessage.getPayload().startsWith("CONNECT")
+			&& !textMessage.getPayload().startsWith("SUBSCRIBE")) {
+			try {
+				log.debug("INBOUND: handleMessage: decryption process - does not start with CONNECT/SUBSCRIBE");
+				byte[] pgpDecryptedPayload = PGPProcessor
+						.decryptByteArray(textMessage.asBytes());
+				log.debug("INBOUND: handleMessage: textMessage pgpDecryptedPayload:"
+						+ new String(pgpDecryptedPayload));
+				message = new TextMessage(pgpDecryptedPayload);
+			} catch (Throwable e) {e.printStackTrace();}
+		}else{
+			log.debug("INBOUND: handleMessage: skipping decryption - starts with CONNECT/SUBSCRIBE");
+		}*/
 		super.handleMessage(message);
 	}
 	
