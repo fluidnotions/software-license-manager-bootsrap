@@ -1,10 +1,13 @@
 package com.groupfio.websocket;
 
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.SubscribableChannel;
+import org.springframework.messaging.support.GenericMessage;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -51,21 +54,16 @@ public class PGPProcessorSubProtocolWebSocketHandler extends SubProtocolWebSocke
 	 */
 	@Override
 	public void handleMessage(Message<?> message) throws MessagingException {
-		/*TextMessage textMessage = (TextMessage) message;
-		log.debug("INBOUND: handleMessage: textMessage payload:" + textMessage.getPayload());
-		if (!textMessage.getPayload().startsWith("CONNECT")
-			&& !textMessage.getPayload().startsWith("SUBSCRIBE")) {
+		GenericMessage<byte[]> genericMessage = (GenericMessage<byte[]>) message;
+		log.debug("OUTBOUND: handleMessage: textMessage payload:" + genericMessage.toString());
 			try {
-				log.debug("INBOUND: handleMessage: decryption process - does not start with CONNECT/SUBSCRIBE");
-				byte[] pgpDecryptedPayload = PGPProcessor
-						.decryptByteArray(textMessage.asBytes());
-				log.debug("INBOUND: handleMessage: textMessage pgpDecryptedPayload:"
-						+ new String(pgpDecryptedPayload));
-				message = new TextMessage(pgpDecryptedPayload);
+				
+				byte[] pgpEncryptedPayload = PGPProcessor.encryptByteArray(genericMessage.getPayload());
+				log.debug("OUTBOUND: handleMessage: textMessage pgpEncryptedPayload:"
+						+ new String(pgpEncryptedPayload));
+				message = new GenericMessage(pgpEncryptedPayload, genericMessage.getHeaders());
 			} catch (Throwable e) {e.printStackTrace();}
-		}else{
-			log.debug("INBOUND: handleMessage: skipping decryption - starts with CONNECT/SUBSCRIBE");
-		}*/
+		
 		super.handleMessage(message);
 	}
 	
